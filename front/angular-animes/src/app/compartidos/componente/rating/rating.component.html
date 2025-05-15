@@ -1,0 +1,12 @@
+<!-- Iteramos para colocar tantas estrellas como elementos tenga maximoRatingArreglo -->
+@for (item of maximoRating; track $index) {
+    <!-- Creando los eventos mouseenter y mouseleave se coloreen las estrellas al pasar el cursor -->
+    <!-- Con el click se queda marcada la puntuacion -->
+    <mat-icon
+    (mouseenter)="manejarMouseEnter($index)"
+    (mouseleave)="manejarMouseLeave()"
+    (click)="manejarClick($index)"
+    [ngClass]="{iluminado: ratingSeleccionado > $index}">star</mat-icon>
+    <!-- Asi si ratingSeleccionado = 2 entonces se iluminan las estrellas de indice 0 y 1 -->
+}   
+

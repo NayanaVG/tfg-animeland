@@ -1,0 +1,25 @@
+<app-listado-generico [listado]="peliculas">
+  <ng-container contenido>
+    <div class="peliculas-contenedor"> <!-- Este es el contenedor del listado de peliculas -->
+      @for (pelicula of peliculas; track $index) {
+        <div class="pelicula-contenedor"> <!-- Este es el contenedor de una unica pelicula -->
+          <a> <!-- Anchor para que el user pueda hacer click a la img y acceder a los detalles -->
+            @if (pelicula.poster){
+              <img [src]="pelicula.poster" width="169" height="250" />
+            } @else {
+              <img src="default.jpg" width="169" height="250" />
+            }
+          </a>
+          <p>
+            <a>{{pelicula.titulo}}</a>
+          </p>
+          <div>
+            <a mat-flat-button>Editar</a> <!-- Anchor para que redirija a edicion de pelicula-->
+            <button mat-flat-button type="button" class="warn">Borrar</button>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-container>
+</app-listado-generico>
+
