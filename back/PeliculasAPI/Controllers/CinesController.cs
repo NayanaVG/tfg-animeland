@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
-using System.Reflection.Metadata;
 
 namespace PeliculasAPI.Controllers
 {
