@@ -65,7 +65,7 @@ namespace PeliculasAPI.Controllers
             await context.SaveChangesAsync();
             await outputCacheStore.EvictByTagAsync(cacheTag, default);
             var peliculaDTO = mapper.Map<PeliculaDTO>(pelicula);
-            return CreatedAtRoute("ObtenerPeliculasPorId", new { id = pelicula.Id }, peliculaDTO);
+            return CreatedAtRoute("ObtenerPeliculaPorId", new { id = pelicula.Id }, peliculaDTO);
         }
 
         private void AsignarOrdenActores(Pelicula pelicula)

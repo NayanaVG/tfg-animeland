@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, viewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild, viewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { actorAutoCompleteDTO } from '../actores';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ActoresService } from '../actores.service';
 
 @Component({
   selector: 'app-autocomplete-actores',
@@ -16,17 +17,24 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
   templateUrl: './autocomplete-actores.component.html',
   styleUrl: './autocomplete-actores.component.css'
 })
-export class AutocompleteActoresComponent {
-   control = new FormControl();
+export class AutocompleteActoresComponent implements OnInit{
+  ngOnInit(): void {
+    this.control.valueChanges.subscribe(valor => {
+      if (typeof valor === 'string' && valor){
+        this.actoresService.obtenerPorNombre(valor).subscribe(actores => {
+          this.actores = actores;
+        });
+      }
+    });
+  }
+  control = new FormControl();
 
-   actores: actorAutoCompleteDTO[] = [
-    {id: 1, nombre: 'Tom Holland', personaje: '', foto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tom_Holland_by_Gage_Skidmore.jpg/220px-Tom_Holland_by_Gage_Skidmore.jpg'},
-    {id: 2, nombre: 'Jennifer Aniston', personaje: '', foto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/JenniferAnistonHWoFFeb2012.jpg/250px-JenniferAnistonHWoFFeb2012.jpg'},
-    {id: 3, nombre: 'Scarlett Johansson', personaje: '', foto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Scarlett_Johansson_by_Gage_Skidmore_2_%28cropped%2C_2%29.jpg/220px-Scarlett_Johansson_by_Gage_Skidmore_2_%28cropped%2C_2%29.jpg'},
-  ]
+  actores: actorAutoCompleteDTO[] = [];
 
   @Input({required: true})
   actoresSeleccionados: actorAutoCompleteDTO[] = [];
+
+  actoresService = inject(ActoresService);
 
   columnasAMostrar = ['imagen', 'nombre', 'personaje', 'acciones'];
 
