@@ -22,5 +22,10 @@ export interface PeliculaCreacionDTO{
 
 export interface PeliculasPostGetDTO {
     generos: GeneroDTO[];
-    cines: CineDTO[];
+    cines: CineDTO[];    
+}
+
+export interface LandingPageDTO {
+    enCines: PeliculaDTO[];
+    proximosEstrenos: PeliculaDTO[];
 }
