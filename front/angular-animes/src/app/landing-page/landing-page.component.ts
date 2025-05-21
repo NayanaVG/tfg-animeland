@@ -13,10 +13,18 @@ export class LandingPageComponent{
   peliculasService = inject(PeliculasService);
 
   constructor(){
+    this.cargarPeliculas();
+  }
+
+  peliculaBorrada(){
+    this.cargarPeliculas();
+  }
+
+  cargarPeliculas(){
     this.peliculasService.obtenerLandingPage().subscribe(modelo => {
       this.peliculasEnCines = modelo.enCines;
       this.peliculasProximosEstrenos = modelo.proximosEstrenos;
-    })
+    });
   }
   
   peliculasEnCines!: any[];

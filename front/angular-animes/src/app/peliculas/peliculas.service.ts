@@ -36,6 +36,10 @@ export class PeliculasService {
     return this.http.put(`${this.urlBase}/${id}`, formData);
   }
 
+  public borrar(id: number){
+    return this.http.delete(`${this.urlBase}/${id}`);
+  }
+
   private construirFormData(pelicula: PeliculaCreacionDTO): FormData{
     const formData = new FormData();
     formData.append('titulo', pelicula.titulo);
