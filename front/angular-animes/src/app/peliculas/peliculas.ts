@@ -1,3 +1,4 @@
+import { HttpClientXsrfModule } from "@angular/common/http";
 import { actorAutoCompleteDTO } from "../actores/actores";
 import { CineDTO } from "../cines/cines";
 import { GeneroDTO } from "../generos/generos";
@@ -28,4 +29,13 @@ export interface PeliculasPostGetDTO {
 export interface LandingPageDTO {
     enCines: PeliculaDTO[];
     proximosEstrenos: PeliculaDTO[];
+}
+
+export interface PeliculasPutGetDTO {
+    pelicula: PeliculaDTO;
+    generosSeleccionados: GeneroDTO[];
+    generosNoSeleccionados: GeneroDTO[];
+    cinesSeleccionados: CineDTO[];
+    cinesNoSeleccionados: CineDTO[];
+    actores: actorAutoCompleteDTO[];
 }

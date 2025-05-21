@@ -1,44 +1,62 @@
-import { Component, Input, numberAttribute } from '@angular/core';
+import { Component, inject, Input, numberAttribute, OnInit } from '@angular/core';
 import { PeliculaCreacionDTO, PeliculaDTO } from '../peliculas';
 import { FormularioPeliculasComponent } from "../formulario-peliculas/formulario-peliculas.component";
 import { SelectorMultipleDTO } from '../../compartidos/componentes/selector-multiple/SelectorMultipleModelo';
 import { actorAutoCompleteDTO } from '../../actores/actores';
+import { PeliculasService } from '../peliculas.service';
+import { Router } from '@angular/router';
+import { extraerErrores } from '../../compartidos/funciones/extraerErrores';
+import { MostrarErroresComponent } from "../../compartidos/componentes/mostrar-errores/mostrar-errores.component";
+import { CargandoComponent } from "../../compartidos/componentes/cargando/cargando.component";
 
 @Component({
   selector: 'app-editar-pelicula',
-  imports: [FormularioPeliculasComponent],
+  imports: [FormularioPeliculasComponent, MostrarErroresComponent, CargandoComponent],
   templateUrl: './editar-pelicula.component.html',
   styleUrl: './editar-pelicula.component.css'
 })
-export class EditarPeliculaComponent {
+export class EditarPeliculaComponent implements OnInit{
+  ngOnInit(): void {
+    this.peliculasService.actualizarGet(this.id).subscribe(modelo => {
+      this.pelicula = modelo.pelicula;
+      this.actoresSeleccionados = modelo.actores;
+      this.cinesNoSeleccionados = modelo.cinesNoSeleccionados.map(cine => {
+        return <SelectorMultipleDTO>{llave: cine.id, valor: cine.nombre};
+      });
+      this.cinesSeleccionados = modelo.cinesSeleccionados.map(cine => {
+        return <SelectorMultipleDTO>{llave: cine.id, valor: cine.nombre};
+      });
+      this.generosNoSeleccionados = modelo.generosNoSeleccionados.map(genero => {
+        return <SelectorMultipleDTO>{llave: genero.id, valor: genero.nombre};
+      });
+      this.generosSeleccionados = modelo.generosSeleccionados.map(genero => {
+        return <SelectorMultipleDTO>{llave: genero.id, valor: genero.nombre};
+      });
+    });
+  }
   @Input({transform: numberAttribute})
   id!: number;
 
-  pelicula: PeliculaDTO = {id: 1, titulo: 'Spiderman', trailer: 'ABC', fechaLanzamiento: new Date('2018-07-25'), poster:'https://upload.wikimedia.org/wikipedia/en/thumb/2/21/Web_of_Spider-Man_Vol_1_129-1.png/240px-Web_of_Spider-Man_Vol_1_129-1.png'}
+  pelicula!: PeliculaDTO;
+  generosSeleccionados!: SelectorMultipleDTO[];
+  generosNoSeleccionados!: SelectorMultipleDTO[];
+  cinesSeleccionados!: SelectorMultipleDTO[];
+  cinesNoSeleccionados!: SelectorMultipleDTO[];
+  actoresSeleccionados!: actorAutoCompleteDTO[];
 
-  generosSeleccionados: SelectorMultipleDTO[] = [
-    {llave: 2, valor: 'Acción'}
-  ];
-
-  generosNoSeleccionados: SelectorMultipleDTO[] = [
-    {llave: 1, valor: 'Drama'},
-    {llave: 2, valor: 'Comedia'}
-  ];
-
-  cinesSeleccionados: SelectorMultipleDTO[] = [
-    {llave: 2, valor: 'Blue'},
-  ];
-
-  cinesNoSeleccionados: SelectorMultipleDTO[] = [
-    {llave: 1, valor: 'Agora'},    
-    {llave: 3, valor: 'Acrópolis'}
-  ];
-
-  actoresSeleccionados: actorAutoCompleteDTO[] = [
-    {id: 2, nombre: 'Jennifer Aniston', personaje: 'Rachel Green', foto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/JenniferAnistonHWoFFeb2012.jpg/250px-JenniferAnistonHWoFFeb2012.jpg'},
-  ] 
+  peliculasService = inject(PeliculasService);
+  router = inject(Router);
+  errores: string[] = [];
 
   guardarCambios(pelicula: PeliculaCreacionDTO){
-    console.log('editando película', pelicula);
+    this.peliculasService.actualizar(this.id, pelicula).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        const errores = extraerErrores(err);
+        this.errores = errores;
+      }
+    })
   }
 }
