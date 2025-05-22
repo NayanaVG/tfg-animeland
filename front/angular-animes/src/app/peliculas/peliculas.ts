@@ -1,4 +1,3 @@
-import { HttpClientXsrfModule } from "@angular/common/http";
 import { actorAutoCompleteDTO } from "../actores/actores";
 import { CineDTO } from "../cines/cines";
 import { GeneroDTO } from "../generos/generos";
@@ -9,6 +8,9 @@ export interface PeliculaDTO{
     fechaLanzamiento: Date;
     trailer: string;
     poster?: string;    
+    generos?: GeneroDTO[];
+    cines?: CineDTO[];
+    actores?: actorAutoCompleteDTO[];
 }
 
 export interface PeliculaCreacionDTO{
