@@ -16,6 +16,7 @@ import { GenerosService } from '../../generos/generos.service';
 import { PeliculasService } from '../peliculas.service';
 import { PaginacionDTO } from '../../compartidos/modelos/PaginacionDTO';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { debounce, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-filtro-peliculas',
@@ -38,7 +39,15 @@ export class FiltroPeliculasComponent implements OnInit{
       this.leerValoresURL();
       this.buscarPeliculas(this.form.value as FiltroPeliculas);
 
-      this.form.valueChanges.subscribe(valores => {
+      this.form.valueChanges
+      // Cada vez que se cambie el valor del formulario entramos al debounceTime
+      .pipe(
+        debounceTime(300)
+      )
+      /* Se ejecuta el buscar después de un tiempo de espera usando debounceTime  
+      Si se cambia varias veces el formulario solo se va a ejecutar según la última actualización del formulario*/
+      .subscribe(valores => {
+        console.log(valores);
         this.buscarPeliculas(valores as FiltroPeliculas);
         this.escribirParametrosBusquedaEnURL(valores as FiltroPeliculas);
         });
