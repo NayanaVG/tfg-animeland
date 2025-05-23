@@ -4,7 +4,7 @@
     {
         public int Pagina { get; set; }
         public int RecordsPorPagina { get; set; }
-        internal PaginacionDTO Paginacion 
+        internal PaginacionDTO Paginacion
         {  get
             {
                 return new PaginacionDTO { Pagina = Pagina, RecordsPorPagina = RecordsPorPagina };
