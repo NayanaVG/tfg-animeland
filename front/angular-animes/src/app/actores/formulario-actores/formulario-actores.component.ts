@@ -71,7 +71,9 @@ export class FormularioActoresComponent implements OnInit{
       return;
     }
     const actor = this.form.value as ActorCreacionDTO;
+    console.log(actor);
     actor.fechaNacimiento = moment(actor.fechaNacimiento).toDate();
+    console.log(actor.fechaNacimiento);
 
     if (typeof actor.foto === "string"){
       actor.foto = undefined;
