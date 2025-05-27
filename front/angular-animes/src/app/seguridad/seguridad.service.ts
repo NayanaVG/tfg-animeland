@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { CredencialesUsuarioDTO, RespuestaAutenticacionDTO } from './seguridad';
+import { CredencialesUsuarioDTO, RespuestaAutenticacionDTO, UsuarioDTO } from './seguridad';
 import { Observable, tap } from 'rxjs';
-import { locales } from 'moment';
+import { PaginacionDTO } from '../compartidos/modelos/PaginacionDTO';
+import { construirQueryParams } from '../compartidos/funciones/construirQueryParams';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,19 @@ export class SeguridadService {
   private urlBase = environment.apiURL + '/usuarios';
   private readonly llaveToken = 'token';
   private readonly llaveExpiracion = 'token-expiracion';
+
+  obtenerUsuariosPaginado(paginacion: PaginacionDTO): Observable<HttpResponse<UsuarioDTO[]>>{
+    let queryParams = construirQueryParams(paginacion);
+    return this.http.get<UsuarioDTO[]>(`${this.urlBase}/ListadoUsuarios`, {params: queryParams, observe: 'response'});
+  }
+
+  hacerAdmin(email: string){
+    return this.http.post(`${this.urlBase}/hacerAdmin`, {email});
+  }
+
+  removerAdmin(email: string){
+    return this.http.post(`${this.urlBase}/removerAdmin`, {email});
+  }
 
   obtenerToken(): string | null{
     return localStorage.getItem(this.llaveToken);
@@ -71,6 +85,11 @@ export class SeguridadService {
   }
 
   obtenerRol(): string {
-    return 'admin';
+    const esAdmin = this.obtenerCampoJWT('esadmin');
+    if (esAdmin){
+      return 'admin';
+    } else {
+      return '';
+    }
   }
 }

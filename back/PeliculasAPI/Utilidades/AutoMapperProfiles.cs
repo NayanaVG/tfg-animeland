@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.DTOs;
@@ -14,7 +15,9 @@ namespace PeliculasAPI.Utilidades
             ConfigurarMapeoActores();
             ConfigurarMapeoCines(geometryFactory);
             ConfigurarMapeoPeliculas();
-        }
+            ConfigurarMapeoUsuarios();
+        }       
+
         private void ConfigurarMapeoGeneros()
         {
             CreateMap<GeneroCreacionDTO, Genero>();
@@ -74,7 +77,11 @@ namespace PeliculasAPI.Utilidades
                 .ForMember(dto => dto.Nombre, entidad => entidad.MapFrom(p => p.Actor.Nombre))
                 .ForMember(dto => dto.Foto, entidad => entidad.MapFrom(p => p.Actor.Foto));
         }
-         
+
+        private void ConfigurarMapeoUsuarios()
+        {
+            CreateMap<IdentityUser, UsuarioDTO>();
+        }
 
     }
 }
